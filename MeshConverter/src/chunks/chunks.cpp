@@ -2,6 +2,9 @@
 
 void WriteFileHeader(FILE *fp)
 {
+	fputs("MESH", fp);
+	uint8_t version = 1;
+	fwrite(&version, 1, 1, fp);
 }
 
 void WriteChunk(VerticesChunk *chunk, FILE *fp)
