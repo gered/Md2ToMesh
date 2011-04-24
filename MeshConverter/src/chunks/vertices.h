@@ -3,32 +3,26 @@
 
 #include "../common.h"
 #include "../geometry/vector3.h"
+#include <vector>
 
 struct VerticesChunk
 {
-	uint32_t count;
-	Vector3 *vertices;
+	std::vector<Vector3> vertices;
 
-	VerticesChunk()
+	uint32_t GetCount()
 	{
-		count = 0;
-		vertices = NULL;
-	}
-
-	~VerticesChunk()
-	{
-		SAFE_DELETE_ARRAY(vertices);
+		return vertices.size();
 	}
 
 	uint32_t GetSize()
 	{
-		if (count == 0)
+		if (vertices.size() == 0)
 			return 0;
 
 		uint32_t size = sizeof(uint32_t);
 		size += 
 			(sizeof(float) * 3)   // x, y, z
-			* count;
+			* vertices.size();
 
 		return size;
 	}

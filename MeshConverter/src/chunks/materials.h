@@ -3,30 +3,24 @@
 
 #include "../common.h"
 #include "../assets/material.h"
+#include <vector>
 
 struct MaterialsChunk
 {
-	uint32_t count;
-	Material *materials;
+	std::vector<Material> materials;
 
-	MaterialsChunk()
+	uint32_t GetCount()
 	{
-		count = 0;
-		materials = NULL;
-	}
-
-	~MaterialsChunk()
-	{
-		SAFE_DELETE_ARRAY(materials);
+		return materials.size();
 	}
 
 	uint32_t GetSize()
 	{
-		if (count == 0)
+		if (materials.size() == 0)
 			return 0;
 
 		uint32_t size = sizeof(uint32_t);
-		for (uint32_t i = 0; i < count; ++i)
+		for (uint32_t i = 0; i < materials.size(); ++i)
 		{
 			size += materials[i].name.length() + 1;   // include null terminator
 			size += sizeof(float) * 4;  // ambient

@@ -3,32 +3,26 @@
 
 #include "../common.h"
 #include "../geometry/vector2.h"
+#include <vector>
 
 struct TexCoordsChunk
 {
-	uint32_t count;
-	Vector2 *texCoords;
+	std::vector<Vector2> texCoords;
 
-	TexCoordsChunk()
+	uint32_t GetCount()
 	{
-		count = 0;
-		texCoords = NULL;
-	}
-
-	~TexCoordsChunk()
-	{
-		SAFE_DELETE_ARRAY(texCoords);
+		return texCoords.size();
 	}
 
 	uint32_t GetSize()
 	{
-		if (count == 0)
+		if (texCoords.size() == 0)
 			return 0;
 
 		uint32_t size = sizeof(uint32_t);
 		size += 
 			(sizeof(float) * 2)   // u, v
-			* count;
+			* texCoords.size();
 
 		return size;
 	}

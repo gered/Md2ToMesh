@@ -15,9 +15,10 @@ void WriteChunk(VerticesChunk *chunk, FILE *fp)
 
 	fputs("VTX", fp);
 	fwrite(&size, 4, 1, fp);
-	fwrite(&chunk->count, 4, 1, fp);
+	uint32_t count = chunk->GetCount();
+	fwrite(&count, 4, 1, fp);
 
-	for (uint32_t i = 0; i < chunk->count; ++i)
+	for (uint32_t i = 0; i < count; ++i)
 	{
 		fwrite(&chunk->vertices[i].x, sizeof(float), 1, fp);
 		fwrite(&chunk->vertices[i].y, sizeof(float), 1, fp);
@@ -33,9 +34,10 @@ void WriteChunk(NormalsChunk *chunk, FILE *fp)
 
 	fputs("NRL", fp);
 	fwrite(&size, 4, 1, fp);
-	fwrite(&chunk->count, 4, 1, fp);
+	uint32_t count = chunk->GetCount();
+	fwrite(&count, 4, 1, fp);
 
-	for (uint32_t i = 0; i < chunk->count; ++i)
+	for (uint32_t i = 0; i < count; ++i)
 	{
 		fwrite(&chunk->normals[i].x, sizeof(float), 1, fp);
 		fwrite(&chunk->normals[i].y, sizeof(float), 1, fp);
@@ -51,9 +53,10 @@ void WriteChunk(TexCoordsChunk *chunk, FILE *fp)
 
 	fputs("TXT", fp);
 	fwrite(&size, 4, 1, fp);
-	fwrite(&chunk->count, 4, 1, fp);
+	uint32_t count = chunk->GetCount();
+	fwrite(&count, 4, 1, fp);
 
-	for (uint32_t i = 0; i < chunk->count; ++i)
+	for (uint32_t i = 0; i < count; ++i)
 	{
 		fwrite(&chunk->texCoords[i].x, sizeof(float), 1, fp);
 		fwrite(&chunk->texCoords[i].y, sizeof(float), 1, fp);
@@ -68,9 +71,10 @@ void WriteChunk(MaterialsChunk *chunk, FILE *fp)
 
 	fputs("MTL", fp);
 	fwrite(&size, 4, 1, fp);
-	fwrite(&chunk->count, 4, 1, fp);
+	uint32_t count = chunk->GetCount();
+	fwrite(&count, 4, 1, fp);
 
-	for (uint32_t i = 0; i < chunk->count; ++i)
+	for (uint32_t i = 0; i < count; ++i)
 	{
 		Material *m = &chunk->materials[i];
 
@@ -112,9 +116,10 @@ void WriteChunk(TrianglesChunk *chunk, FILE *fp)
 
 	fputs("TRI", fp);
 	fwrite(&size, 4, 1, fp);
-	fwrite(&chunk->count, 4, 1, fp);
+	uint32_t count = chunk->GetCount();
+	fwrite(&count, 4, 1, fp);
 
-	for (uint32_t i = 0; i < chunk->count; ++i)
+	for (uint32_t i = 0; i < count; ++i)
 	{
 		Triangle *t = &chunk->triangles[i];
 

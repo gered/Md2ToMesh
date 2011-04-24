@@ -3,32 +3,26 @@
 
 #include "../common.h"
 #include "../geometry/vector3.h"
+#include <vector>
 
 struct NormalsChunk
 {
-	uint32_t count;
-	Vector3 *normals;
+	std::vector<Vector3> normals;
 
-	NormalsChunk()
+	uint32_t GetCount()
 	{
-		count = 0;
-		normals = NULL;
-	}
-
-	~NormalsChunk()
-	{
-		SAFE_DELETE_ARRAY(normals);
+		return normals.size();
 	}
 
 	uint32_t GetSize()
 	{
-		if (count == 0)
+		if (normals.size() == 0)
 			return 0;
 
 		uint32_t size = sizeof(uint32_t);
 		size += 
 			(sizeof(float) * 3)   // x, y, z
-			* count;
+			* normals.size();
 
 		return size;
 	}

@@ -3,26 +3,20 @@
 
 #include "../common.h"
 #include "../geometry/triangle.h"
+#include <vector>
 
 struct TrianglesChunk
 {
-	uint32_t count;
-	Triangle *triangles;
+	std::vector<Triangle> triangles;
 
-	TrianglesChunk()
+	uint32_t GetCount()
 	{
-		count = 0;
-		triangles = NULL;
-	}
-
-	~TrianglesChunk()
-	{
-		SAFE_DELETE_ARRAY(triangles);
+		return triangles.size();
 	}
 
 	uint32_t GetSize()
 	{
-		if (count == 0)
+		if (triangles.size() == 0)
 			return 0;
 
 		uint32_t size = sizeof(uint32_t);
@@ -32,7 +26,7 @@ struct TrianglesChunk
 				+ (sizeof(uint32_t) * 3) // normal indices
 				+ (sizeof(uint32_t) * 3) // texcoord indices
 				+ sizeof(uint32_t)       // material index
-			) * count;
+			) * triangles.size();
 
 		return size;
 	}
