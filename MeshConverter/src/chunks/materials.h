@@ -21,6 +21,26 @@ struct MaterialsChunk
 	{
 		SAFE_DELETE_ARRAY(materials);
 	}
+
+	size_t GetSize()
+	{
+		if (count == 0)
+			return 0;
+
+		size_t size = sizeof(uint32_t);
+		for (uint32_t i = 0; i < count; ++i)
+		{
+			size += materials[i].name.length() + 1;   // include null terminator
+			size += sizeof(float) * 4;  // ambient
+			size += sizeof(float) * 4;  // diffuse
+			size += sizeof(float) * 4;  // specular
+			size += sizeof(float) * 4;  // emissive
+			size += sizeof(float);      // shininess
+			size += sizeof(float);      // opacity
+		}
+
+		return size;
+	}
 };
 
 #endif
