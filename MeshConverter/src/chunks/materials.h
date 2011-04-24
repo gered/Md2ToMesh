@@ -22,12 +22,12 @@ struct MaterialsChunk
 		SAFE_DELETE_ARRAY(materials);
 	}
 
-	size_t GetSize()
+	uint32_t GetSize()
 	{
 		if (count == 0)
 			return 0;
 
-		size_t size = sizeof(uint32_t);
+		uint32_t size = sizeof(uint32_t);
 		for (uint32_t i = 0; i < count; ++i)
 		{
 			size += materials[i].name.length() + 1;   // include null terminator

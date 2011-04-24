@@ -22,12 +22,12 @@ struct TrianglesChunk
 		SAFE_DELETE_ARRAY(triangles);
 	}
 
-	size_t GetSize()
+	uint32_t GetSize()
 	{
 		if (count == 0)
 			return 0;
 
-		size_t size = sizeof(uint32_t);
+		uint32_t size = sizeof(uint32_t);
 		size += 
 			(
 				(sizeof(uint32_t) * 3)   // vertex indices
