@@ -6,8 +6,6 @@
 
 struct VerticesChunk
 {
-	static const char *ident = "VTX";
-
 	uint32_t count;
 	Vector3 *vertices;
 

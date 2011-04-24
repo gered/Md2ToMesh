@@ -6,8 +6,6 @@
 
 struct MaterialsChunk
 {
-	static const char *ident = "MTL";
-	
 	uint32_t count;
 	Material *materials;
 

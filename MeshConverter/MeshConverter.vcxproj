@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\chunks\chunks.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\md2\md2.cpp" />
     <ClCompile Include="src\ms3d\ms3d.cpp" />
@@ -90,6 +91,7 @@
   <ItemGroup>
     <ClInclude Include="src\assets\color.h" />
     <ClInclude Include="src\assets\material.h" />
+    <ClInclude Include="src\chunks\chunks.h" />
     <ClInclude Include="src\chunks\materials.h" />
     <ClInclude Include="src\chunks\normals.h" />
     <ClInclude Include="src\chunks\texcoords.h" />

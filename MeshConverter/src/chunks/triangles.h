@@ -6,8 +6,6 @@
 
 struct TrianglesChunk
 {
-	static const char *ident = "TRI";
-
 	uint32_t count;
 	Triangle *triangles;
 

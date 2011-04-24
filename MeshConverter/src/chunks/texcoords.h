@@ -6,8 +6,6 @@
 
 struct TexCoordsChunk
 {
-	static const char *ident = "TXT";
-
 	uint32_t count;
 	Vector2 *texCoords;
 

@@ -6,8 +6,6 @@
 
 struct NormalsChunk
 {
-	static const char *ident = "NRL";
-
 	uint32_t count;
 	Vector3 *normals;
 
