@@ -1,6 +1,8 @@
 #include "sm.h"
 
 #include <stdio.h>
+#include "../util/files.h"
+#include "../chunks/chunks.h"
 
 StaticModel::StaticModel()
 {
@@ -83,21 +85,13 @@ bool StaticModel::Load(const std::string &file)
 		fread(&specular, 4, 1, fp);
 		fread(&emission, 4, 1, fp);
 
-		m_materials[i].material->SetAmbient(ambient);
-		m_materials[i].material->SetDiffuse(diffuse);
-		m_materials[i].material->SetSpecular(specular);
-		m_materials[i].material->SetEmission(emission);
-
-		// Read up to the null terminator on the texture filename (could be any length)
-		count = 0;
-		texture = "";
-		do
-		{
-			fread(&c, 1, 1, fp);
-			if (c)
-				texture += c;
-		} while (c != '\0');
-		m_materials[i].material->SetTexture(texture);
+		m_materials[i].material->ambient = Color::FromInt(ambient);
+		m_materials[i].material->diffuse = Color::FromInt(diffuse);
+		m_materials[i].material->specular = Color::FromInt(specular);
+		m_materials[i].material->emissive = Color::FromInt(emission);
+		m_materials[i].material->shininess = 0.0f;
+		m_materials[i].material->opacity = COLOR_ALPHA_OPAQUE;
+		ReadString(fp, m_materials[i].material->name);
 	}
 
 	// Read in triangle definitions (all are indexes into raw data following)
@@ -213,106 +207,54 @@ bool StaticModel::ConvertToMesh(const std::string &file)
 	if (fp == NULL)
 		return false;
 
-	fputs("MESH", fp);
-	unsigned char version = 1;
-	fwrite(&version, 1, 1, fp);
+	WriteFileHeader(fp);
 
-	// vertices chunk
-	fputs("VTX", fp);
-	long numVertices = m_numVertices;
-	long sizeofVertices = (sizeof(float) * 3) * numVertices + sizeof(long);
-	fwrite(&sizeofVertices, sizeof(long), 1, fp);
-	fwrite(&numVertices, sizeof(long), 1, fp);
-	for (long i = 0; i < numVertices; ++i)
+	VerticesChunk *verticesChunk = new VerticesChunk();
+	for (long i = 0; i < m_numVertices; ++i)
+		verticesChunk->vertices.push_back(m_vertices[i]);
+	WriteChunk(verticesChunk, fp);
+	SAFE_DELETE(verticesChunk);
+
+	NormalsChunk *normalsChunk = new NormalsChunk();
+	for (long i = 0; i < m_numNormals; ++i)
+		normalsChunk->normals.push_back(m_normals[i]);
+	WriteChunk(normalsChunk, fp);
+	SAFE_DELETE(normalsChunk);
+
+	TexCoordsChunk *texCoordsChunk = new TexCoordsChunk();
+	for (long i = 0; i < m_numTexCoords; ++i)
+		texCoordsChunk->texCoords.push_back(m_texCoords[i]);
+	WriteChunk(texCoordsChunk, fp);
+	SAFE_DELETE(texCoordsChunk);
+
+	MaterialsChunk *materialsChunk = new MaterialsChunk();
+	for (long i = 0; i < m_numMaterials; ++i)
+		materialsChunk->materials.push_back(*m_materials[i].material);
+	WriteChunk(materialsChunk, fp);
+	SAFE_DELETE(materialsChunk);
+
+	TrianglesChunk *trianglesChunk = new TrianglesChunk();
+	for (long i = 0; i < m_numPolygons; ++i)
 	{
-		const Vector3 *vector = &m_vertices[i];
-		fwrite(&vector->x, sizeof(float), 1, fp);
-		fwrite(&vector->y, sizeof(float), 1, fp);
-		fwrite(&vector->z, sizeof(float), 1, fp);
+		Triangle t;
+
+		t.vertices[0] = m_polygons[i].vertices[0];
+		t.vertices[1] = m_polygons[i].vertices[1];
+		t.vertices[2] = m_polygons[i].vertices[2];
+
+		t.normals[0] = m_polygons[i].normals[0];
+		t.normals[1] = m_polygons[i].normals[1];
+		t.normals[2] = m_polygons[i].normals[2];
+
+		t.texCoords[0] = m_polygons[i].texcoords[0];
+		t.texCoords[1] = m_polygons[i].texcoords[1];
+		t.texCoords[2] = m_polygons[i].texcoords[2];
+
+		t.materialIndex = m_polygons[i].material;
+
+		trianglesChunk->triangles.push_back(t);
 	}
-
-	// normals chunk
-	fputs("NRL", fp);
-	long numNormals = m_numNormals;
-	long sizeofNormals = (sizeof(float) * 3) * numNormals + sizeof(long);
-	fwrite(&sizeofNormals, sizeof(long), 1, fp);
-	fwrite(&numNormals, sizeof(long), 1, fp);
-	for (long i = 0; i < numNormals; ++i)
-	{
-		const Vector3 *normal = &m_normals[i];
-		fwrite(&normal->x, sizeof(float), 1, fp);
-		fwrite(&normal->y, sizeof(float), 1, fp);
-		fwrite(&normal->z, sizeof(float), 1, fp);
-	}
-
-	// texture coordinates chunk
-	fputs("TXT", fp);
-	long numTexCoords = m_numTexCoords;
-	long sizeofTexCoords = (sizeof(float) * 2) * numTexCoords + sizeof(long);
-	fwrite(&sizeofTexCoords, sizeof(long), 1, fp);
-	fwrite(&numTexCoords, sizeof(long), 1, fp);
-	for (long i = 0; i < numTexCoords; ++i)
-	{
-		const Vector2 *texCoord = &m_texCoords[i];
-		fwrite(&texCoord->x, sizeof(float), 1, fp);
-		fwrite(&texCoord->y, sizeof(float), 1, fp);
-	}
-
-	// materials chunk
-	fputs("MTL", fp);
-
-	long numMaterials = m_numMaterials;
-
-	// figure out the size of all the material texture filename strings
-	long sizeofNames = 0;
-	for (int i = 0; i < numMaterials; ++i)
-		sizeofNames += m_materials[i].material->GetTexture().length() + 1;
-
-	long sizeofMaterials = sizeofNames + sizeof(long);
-	fwrite(&sizeofMaterials, sizeof(long), 1, fp);
-	fwrite(&numMaterials, sizeof(long), 1, fp);
-	for (long i = 0; i < numMaterials; ++i)
-	{
-		const SmMaterial *material = &m_materials[i];
-		fputs(material->material->GetTexture().c_str(), fp);
-		fwrite("\0", 1, 1, fp);
-	}
-
-	// triangles chunk
-	fputs("TRI", fp);
-	long numPolys = m_numPolygons;
-	long sizeofPolys = ((sizeof(long) * 3) * 3 + sizeof(long)) * numPolys + sizeof(long);
-	fwrite(&sizeofPolys, sizeof(long), 1, fp);
-	fwrite(&numPolys, sizeof(long), 1, fp);
-	for (long i = 0; i < numPolys; ++i)
-	{
-		const SmPolygon *triangle = &m_polygons[i];
-		long data;
-
-		data = triangle->vertices[0];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = triangle->vertices[1];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = triangle->vertices[2];
-		fwrite(&data, sizeof(long), 1, fp);
-
-		data = triangle->normals[0];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = triangle->normals[1];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = triangle->normals[2];
-		fwrite(&data, sizeof(long), 1, fp);
-
-		data = triangle->texcoords[0];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = triangle->texcoords[1];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = triangle->texcoords[2];
-		fwrite(&data, sizeof(long), 1, fp);
-
-		data = triangle->material;
-		fwrite(&data, sizeof(long), 1, fp);
-	}
+	WriteChunk(trianglesChunk, fp);
 
 	fclose(fp);
 	return true;
