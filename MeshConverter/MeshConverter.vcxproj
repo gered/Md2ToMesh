@@ -90,10 +90,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\assets\material.h" />
+    <ClInclude Include="src\chunks\materials.h" />
+    <ClInclude Include="src\chunks\normals.h" />
+    <ClInclude Include="src\chunks\texcoords.h" />
+    <ClInclude Include="src\chunks\triangles.h" />
+    <ClInclude Include="src\chunks\vertices.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\geometry\common.h" />
     <ClInclude Include="src\geometry\matrix4x4.h" />
     <ClInclude Include="src\geometry\quaternion.h" />
+    <ClInclude Include="src\geometry\triangle.h" />
     <ClInclude Include="src\geometry\vector2.h" />
     <ClInclude Include="src\geometry\vector3.h" />
     <ClInclude Include="src\md2\md2.h" />
