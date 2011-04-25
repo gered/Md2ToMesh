@@ -23,7 +23,7 @@ struct AnimationsChunk
 		for (uint32_t i = 0; i < animations.size(); ++i)
 		{
 			size += animations[i].name.length() + 1;   // include null terminator
-			size += sizeof(uint32_t) * 2 // start + end
+			size += sizeof(uint32_t) * 2;              // start + end
 		}
 
 		return size;
