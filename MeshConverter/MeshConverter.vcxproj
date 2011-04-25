@@ -89,9 +89,13 @@
     <ClCompile Include="src\util\files.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\assets\animationsequence.h" />
     <ClInclude Include="src\assets\color.h" />
     <ClInclude Include="src\assets\material.h" />
+    <ClInclude Include="src\chunks\animations.h" />
     <ClInclude Include="src\chunks\chunks.h" />
+    <ClInclude Include="src\chunks\keyframes.h" />
+    <ClInclude Include="src\chunks\keyframetriangles.h" />
     <ClInclude Include="src\chunks\materials.h" />
     <ClInclude Include="src\chunks\normals.h" />
     <ClInclude Include="src\chunks\texcoords.h" />
@@ -99,6 +103,8 @@
     <ClInclude Include="src\chunks\vertices.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\geometry\common.h" />
+    <ClInclude Include="src\geometry\keyframe.h" />
+    <ClInclude Include="src\geometry\keyframetriangle.h" />
     <ClInclude Include="src\geometry\matrix4x4.h" />
     <ClInclude Include="src\geometry\quaternion.h" />
     <ClInclude Include="src\geometry\triangle.h" />
