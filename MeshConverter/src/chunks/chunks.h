@@ -13,11 +13,17 @@ void WriteFileHeader(FILE *fp);
 #include "texcoords.h"
 #include "materials.h"
 #include "triangles.h"
+#include "keyframes.h"
+#include "keyframetriangles.h"
+#include "animations.h"
 
 void WriteChunk(VerticesChunk *chunk, FILE *fp);
 void WriteChunk(NormalsChunk *chunk, FILE *fp);
 void WriteChunk(TexCoordsChunk *chunk, FILE *fp);
 void WriteChunk(MaterialsChunk *chunk, FILE *fp);
 void WriteChunk(TrianglesChunk *chunk, FILE *fp);
+void WriteChunk(KeyFramesChunk *chunk, FILE *fp);
+void WriteChunk(KeyFrameTrianglesChunk *chunk, FILE *fp);
+void WriteChunk(AnimationsChunk *chunk, FILE *fp);
 
 #endif
