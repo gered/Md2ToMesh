@@ -1,6 +1,7 @@
 #include "md2.h"
 
 #include <stdio.h>
+#include "../chunks/chunks.h"
 
 Md2::Md2()
 {
@@ -297,104 +298,59 @@ bool Md2::ConvertToMesh(const std::string &file)
 	if (fp == NULL)
 		return false;
 
-	fputs("MESH", fp);
-	unsigned char version = 1;
-	fwrite(&version, 1, 1, fp);
 
-	// keyframes chunk
-	fputs("KFR", fp);
-	long numFrames = m_numFrames;
-	long numVertices = m_numVertices;
-	long sizeofFrames = ((sizeof(float) * 3 * 2) * numVertices) * numFrames + (sizeof(long) * 2);
-	fwrite(&sizeofFrames, sizeof(long), 1, fp);
-	fwrite(&numFrames, sizeof(long), 1, fp);
-	fwrite(&numVertices, sizeof(long), 1, fp);
-	for (long i = 0; i < numFrames; ++i)
+	WriteFileHeader(fp);
+
+	KeyFramesChunk *keyFramesChunk = new KeyFramesChunk();
+	keyFramesChunk->numVertices = m_numVertices;
+	for (long i = 0; i < m_numFrames; ++i)
 	{
-		// vertices
+		KeyFrame *frame = keyFramesChunk->AddFrame();
+
 		for (int j = 0; j < m_numVertices; ++j)
-		{
-			const Vector3 *vertex = &m_frames[i].vertices[j];
-			fwrite(&vertex->x, sizeof(float), 1, fp);
-			fwrite(&vertex->y, sizeof(float), 1, fp);
-			fwrite(&vertex->z, sizeof(float), 1, fp);
-		}
-
-		// normals
+			frame->vertices[j] = m_frames[i].vertices[j];
+		
 		for (int j = 0; j < m_numVertices; ++j)
-		{
-			const Vector3 *normal = &m_frames[i].normals[j];
-			fwrite(&normal->x, sizeof(float), 1, fp);
-			fwrite(&normal->y, sizeof(float), 1, fp);
-			fwrite(&normal->z, sizeof(float), 1, fp);
-		}
+			frame->normals[j] = m_frames[i].normals[j];
 	}
+	WriteChunk(keyFramesChunk, fp);
 
-	// textures chunk
-	fputs("KTX", fp);
-	long numTexCoords = m_numTexCoords;
-	long sizeofTexCoords = (sizeof(float) * 2) * numTexCoords + sizeof(long);
-	fwrite(&sizeofTexCoords, sizeof(long), 1, fp);
-	fwrite(&numTexCoords, sizeof(long), 1, fp);
-	for (long i = 0; i < numTexCoords; ++i)
+	TexCoordsChunk *texCoordsChunk = new TexCoordsChunk();
+	for (long i = 0; i < m_numTexCoords; ++i)
+		texCoordsChunk->texCoords.push_back(m_texCoords[i]);
+	WriteChunk(texCoordsChunk, fp);
+
+	KeyFrameTrianglesChunk *trianglesChunk = new KeyFrameTrianglesChunk();
+	for (long i = 0; i < m_numPolys; ++i)
 	{
-		const Vector2 *texCoord = &m_texCoords[i];
-		fwrite(&texCoord->x, sizeof(float), 1, fp);
-		fwrite(&texCoord->y, sizeof(float), 1, fp);
+		KeyFrameTriangle t;
+
+		t.vertices[0] = m_polys[i].vertex[0];
+		t.vertices[1] = m_polys[i].vertex[1];
+		t.vertices[2] = m_polys[i].vertex[2];
+
+		t.texCoords[0] = m_polys[i].texCoord[0];
+		t.texCoords[1] = m_polys[i].texCoord[1];
+		t.texCoords[2] = m_polys[i].texCoord[2];
+
+		trianglesChunk->triangles.push_back(t);
 	}
-
-	// triangles chunk
-	fputs("KTR", fp);
-	long numPolys = m_numPolys;
-	long sizeofPolys = (sizeof(long) * 3 * 2) * numPolys + sizeof(long);
-	fwrite(&sizeofPolys, sizeof(long), 1, fp);
-	fwrite(&numPolys, sizeof(long), 1, fp);
-	for (long i = 0; i < numPolys; ++i)
-	{
-		long data;
-
-		// vertex indices
-		data = m_polys[i].vertex[0];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = m_polys[i].vertex[1];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = m_polys[i].vertex[2];
-		fwrite(&data, sizeof(long), 1, fp);
-
-		// tex coord indices
-		data = m_polys[i].texCoord[0];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = m_polys[i].texCoord[1];
-		fwrite(&data, sizeof(long), 1, fp);
-		data = m_polys[i].texCoord[2];
-		fwrite(&data, sizeof(long), 1, fp);
-	}
+	WriteChunk(trianglesChunk, fp);
 
 	if (m_animations.size() > 0)
 	{
-		// figure out the size of all the animation name strings
-		long sizeofNames = 0;
-		for (int i = 0; i < m_animations.size(); ++i)
-			sizeofNames += m_animations[i].name.length() + 1;
-
-		// animations chunk
-		fputs("ANI", fp);
-		long numAnimations = m_animations.size();
-		long sizeofAnimations = (sizeof(long) * 2) * numAnimations + sizeofNames + sizeof(long);
-		fwrite(&sizeofAnimations, sizeof(long), 1, fp);
-		fwrite(&numAnimations, sizeof(long), 1, fp);
-		for (long i = 0; i < numAnimations; ++i)
+		AnimationsChunk *animationsChunk = new AnimationsChunk();
+		for (long i = 0; i < m_animations.size(); ++i)
 		{
-			long data;
-			const Md2Animation *animation = &m_animations[i];
-			//fputs(animation->name.c_str(), fp);
-			fputs(animation->name.c_str(), fp);
-			fwrite("\0", 1, 1, fp);
-			data = animation->startFrame;
-			fwrite(&data, sizeof(long), 1, fp);
-			data = animation->endFrame;
-			fwrite(&data, sizeof(long), 1, fp);
+			AnimationSequence a;
+
+			a.name = m_animations[i].name;
+			a.start = m_animations[i].startFrame;
+			a.end = m_animations[i].endFrame;
+
+			animationsChunk->animations.push_back(a);
 		}
+		WriteChunk(animationsChunk, fp);
 	}
 
 	fclose(fp);

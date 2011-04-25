@@ -147,20 +147,27 @@ void WriteChunk(KeyFramesChunk *chunk, FILE *fp)
 
 	fputs("KFR", fp);
 	fwrite(&size, 4, 1, fp);
-	uint32_t count = chunk->GetCount();
-	fwrite(&count, 4, 1, fp);
+	uint32_t numFrames = chunk->GetNumFrames();
+	fwrite(&numFrames, 4, 1, fp);
+	fwrite(&chunk->numVertices, 4, 1, fp);
 
-	for (uint32_t i = 0; i < count; ++i)
+	for (uint32_t i = 0; i < numFrames; ++i)
 	{
-		KeyFrame *f = &chunk->frames[i];
+		KeyFrame *f = chunk->frames[i];
 
-		fwrite(&f->vertex.x, sizeof(float), 1, fp);
-		fwrite(&f->vertex.y, sizeof(float), 1, fp);
-		fwrite(&f->vertex.z, sizeof(float), 1, fp);
+		for (uint32_t j = 0; j < chunk->numVertices; ++j)
+		{
+			fwrite(&f->vertices->x, sizeof(float), 1, fp);
+			fwrite(&f->vertices->y, sizeof(float), 1, fp);
+			fwrite(&f->vertices->z, sizeof(float), 1, fp);
+		}
 
-		fwrite(&f->normal.x, sizeof(float), 1, fp);
-		fwrite(&f->normal.y, sizeof(float), 1, fp);
-		fwrite(&f->normal.z, sizeof(float), 1, fp);
+		for (uint32_t j = 0; j < chunk->numVertices; ++j)
+		{
+			fwrite(&f->normals->x, sizeof(float), 1, fp);
+			fwrite(&f->normals->y, sizeof(float), 1, fp);
+			fwrite(&f->normals->z, sizeof(float), 1, fp);
+		}
 	}
 }
 
