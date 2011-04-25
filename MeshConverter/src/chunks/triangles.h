@@ -19,13 +19,13 @@ struct TrianglesChunk
 		if (triangles.size() == 0)
 			return 0;
 
-		uint32_t size = sizeof(uint32_t);
+		uint32_t size = 4;  // count
 		size += 
 			(
-				(sizeof(uint32_t) * 3)   // vertex indices
-				+ (sizeof(uint32_t) * 3) // normal indices
-				+ (sizeof(uint32_t) * 3) // texcoord indices
-				+ sizeof(uint32_t)       // material index
+				(4 * 3)   // vertex indices
+				+ (4 * 3) // normal indices
+				+ (4 * 3) // texcoord indices
+				+ 4       // material index
 			) * triangles.size();
 
 		return size;

@@ -19,7 +19,7 @@ struct TexCoordsChunk
 		if (texCoords.size() == 0)
 			return 0;
 
-		uint32_t size = sizeof(uint32_t);
+		uint32_t size = 4;  // count
 		size += 
 			(sizeof(float) * 2)   // u, v
 			* texCoords.size();

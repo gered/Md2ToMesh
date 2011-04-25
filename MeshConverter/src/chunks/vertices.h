@@ -19,7 +19,7 @@ struct VerticesChunk
 		if (vertices.size() == 0)
 			return 0;
 
-		uint32_t size = sizeof(uint32_t);
+		uint32_t size = 4;  // count
 		size += 
 			(sizeof(float) * 3)   // x, y, z
 			* vertices.size();

@@ -19,7 +19,7 @@ struct KeyFramesChunk
 		if (frames.size() == 0)
 			return 0;
 
-		uint32_t size = sizeof(uint32_t);
+		uint32_t size = 4;  // count
 		size += 
 			(
 				(sizeof(float) * 3)      // vertex

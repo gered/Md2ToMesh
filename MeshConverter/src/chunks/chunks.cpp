@@ -123,19 +123,19 @@ void WriteChunk(TrianglesChunk *chunk, FILE *fp)
 	{
 		Triangle *t = &chunk->triangles[i];
 
-		fwrite(&t->vertices[0], sizeof(uint32_t), 1, fp);
-		fwrite(&t->vertices[1], sizeof(uint32_t), 1, fp);
-		fwrite(&t->vertices[2], sizeof(uint32_t), 1, fp);
+		fwrite(&t->vertices[0], 4, 1, fp);
+		fwrite(&t->vertices[1], 4, 1, fp);
+		fwrite(&t->vertices[2], 4, 1, fp);
 
-		fwrite(&t->normals[0], sizeof(uint32_t), 1, fp);
-		fwrite(&t->normals[1], sizeof(uint32_t), 1, fp);
-		fwrite(&t->normals[2], sizeof(uint32_t), 1, fp);
+		fwrite(&t->normals[0], 4, 1, fp);
+		fwrite(&t->normals[1], 4, 1, fp);
+		fwrite(&t->normals[2], 4, 1, fp);
 
-		fwrite(&t->texCoords[0], sizeof(uint32_t), 1, fp);
-		fwrite(&t->texCoords[1], sizeof(uint32_t), 1, fp);
-		fwrite(&t->texCoords[2], sizeof(uint32_t), 1, fp);
+		fwrite(&t->texCoords[0], 4, 1, fp);
+		fwrite(&t->texCoords[1], 4, 1, fp);
+		fwrite(&t->texCoords[2], 4, 1, fp);
 
-		fwrite(&t->materialIndex, sizeof(uint32_t), 1, fp);
+		fwrite(&t->materialIndex, 4, 1, fp);
 	}
 }
 

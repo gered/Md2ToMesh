@@ -19,7 +19,7 @@ struct MaterialsChunk
 		if (materials.size() == 0)
 			return 0;
 
-		uint32_t size = sizeof(uint32_t);
+		uint32_t size = 4;  // count
 		for (uint32_t i = 0; i < materials.size(); ++i)
 		{
 			size += materials[i].name.length() + 1;   // include null terminator
