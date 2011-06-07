@@ -6,5 +6,5 @@
 Debug/
 Release/
 ipch/
-
 *.suo
+meshconverter
