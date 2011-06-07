@@ -1,6 +1,7 @@
 #include "obj.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <fstream>
 #include <sstream>
 
@@ -386,7 +387,7 @@ bool Obj::LoadMaterialLibrary(const std::string &file, const std::string &textur
 		{
 			//ASSERT(currentMaterial >= 0);
 			sscanf(line.c_str(), "Ka %f %f %f", &r, &g, &b);
-			m_materials[currentMaterial].material->SetAmbient(RGB_24_f(r, g, b));
+			m_materials[currentMaterial].material->ambient = Color::FromInt(RGB_24_f(r, g, b));
 		}
 
 		// Diffuse color
@@ -394,7 +395,7 @@ bool Obj::LoadMaterialLibrary(const std::string &file, const std::string &textur
 		{
 			//ASSERT(currentMaterial >= 0);
 			sscanf(line.c_str(), "Kd %f %f %f", &r, &g, &b);
-			m_materials[currentMaterial].material->SetDiffuse(RGB_24_f(r, g, b));
+			m_materials[currentMaterial].material->diffuse = Color::FromInt(RGB_24_f(r, g, b));
 		}
 
 		// Specular color
@@ -402,7 +403,7 @@ bool Obj::LoadMaterialLibrary(const std::string &file, const std::string &textur
 		{
 			//ASSERT(currentMaterial >= 0);
 			sscanf(line.c_str(), "Ks %f %f %f", &r, &g, &b);
-			m_materials[currentMaterial].material->SetSpecular(RGB_24_f(r, g, b));
+			m_materials[currentMaterial].material->specular = Color::FromInt(RGB_24_f(r, g, b));
 		}
 
 		// Alpha value
@@ -427,7 +428,7 @@ bool Obj::LoadMaterialLibrary(const std::string &file, const std::string &textur
 		else if (op == "map_Ka" || op == "map_Kd")
 		{
 			//ASSERT(currentMaterial >= 0);
-			m_materials[currentMaterial].material->SetTexture(texturePath + line.substr(op.length() + 1));
+			m_materials[currentMaterial].material->textureFile = texturePath + line.substr(op.length() + 1);
 		}
 
 	}

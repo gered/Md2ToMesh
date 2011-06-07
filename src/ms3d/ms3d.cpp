@@ -1,6 +1,8 @@
 #include "ms3d.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "../util/files.h"
 

@@ -14,6 +14,7 @@ class Material
 {
 public:
 	std::string name;
+	std::string textureFile;
 	Color ambient;
 	Color diffuse;
 	Color specular;
