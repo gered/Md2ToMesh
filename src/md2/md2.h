@@ -39,7 +39,7 @@ struct Md2Polygon
 };
 
 // For each keyframe, stores the vertices, normals, and the string name
-typedef struct Md2Frame
+struct Md2Frame
 {
 	std::string name;
 	Vector3 *vertices;
