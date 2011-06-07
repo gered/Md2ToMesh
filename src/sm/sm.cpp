@@ -38,10 +38,8 @@ bool StaticModel::Load(const std::string &file)
 	unsigned int ambient, diffuse, specular, emission;
 	unsigned int n;
 	int currentMaterial;
-	int count;
 	float x, y, z;
 	unsigned char header[2];
-	unsigned char c;
 	std::string texture;
 
 	fp = fopen(file.c_str(), "rb");

@@ -240,7 +240,7 @@ void Obj::ParseFaceDefinition(const std::string &faceDefinition, ObjMaterial *cu
 			sscanf(currentVertex.c_str(), "%d//%d", &thisVertex[0], &thisVertex[2]);
 			break;
 		case OBJ_VERTEX_TEXCOORD:		// v/vt
-			sscanf(currentVertex.c_str(), "%d/%d", &thisVertex[0]);
+			sscanf(currentVertex.c_str(), "%d/%d", &thisVertex[0], &thisVertex[1]);
 			break;
 		}
 
@@ -443,7 +443,6 @@ bool Obj::CountDefinedMaterials(const std::string &file)
 	std::ifstream input;
 	std::string line;
 	std::string op;
-	int count = 0;
 
 	input.open(file.c_str());
 	if (input.fail())
