@@ -10,7 +10,7 @@
 #define MD2_SKIN_NAME_LENGTH 64
 #define MD2_FRAME_NAME_LENGTH 16
 
-typedef struct 
+struct Md2Header
 {
 	char ident[4];                               // Should be "IDP2"
 	int version;                                 // Should be 8
@@ -29,14 +29,14 @@ typedef struct
 	int offsetFrames;
 	int offsetGlCmds;
 	int offsetEnd;
-} Md2Header;
+};
 
 // Vertex and texcoord indices
-typedef struct
+struct Md2Polygon
 {
 	unsigned short vertex[3];
 	unsigned short texCoord[3];
-} Md2Polygon;
+};
 
 // For each keyframe, stores the vertices, normals, and the string name
 typedef struct Md2Frame
@@ -56,14 +56,14 @@ typedef struct Md2Frame
 		delete[] vertices;
 		delete[] normals;
 	}
-} Md2Frame;
+};
 
-typedef struct
+struct Md2Animation
 {
 	std::string name;
 	unsigned int startFrame;
 	unsigned int endFrame;
-} Md2Animation;
+};
 
 class Md2
 {

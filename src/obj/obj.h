@@ -7,21 +7,21 @@
 
 #include <string>
 
-typedef enum OBJ_FACE_VERTEX_TYPE
+enum OBJ_FACE_VERTEX_TYPE
 {
 	OBJ_VERTEX_TEXCOORD,
 	OBJ_VERTEX_NORMAL,
 	OBJ_VERTEX_FULL
 };
 
-typedef struct
+struct ObjFace
 {
 	unsigned int vertices[3];
 	unsigned int texcoords[3];
 	unsigned int normals[3];
-} ObjFace;
+};
 
-typedef struct ObjMaterial
+struct ObjMaterial
 {
 	std::string name;
 	Material *material;
@@ -42,7 +42,7 @@ typedef struct ObjMaterial
 		delete material;
 		delete[] faces;
 	}
-} ObjMaterial;
+};
 
 class Obj
 {

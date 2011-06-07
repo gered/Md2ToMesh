@@ -7,16 +7,16 @@
 #include <string>
 
 
-typedef struct
+struct SmPolygon
 {
 	unsigned int vertices[3];
 	unsigned int normals[3];
 	unsigned int texcoords[3];
 	unsigned short colors[3];
 	short material;
-} SmPolygon;
+};
 
-typedef struct SmMaterial
+struct SmMaterial
 {
 	Material *material;
 	unsigned int polyStart;
@@ -33,7 +33,7 @@ typedef struct SmMaterial
 	{
 		delete material;
 	}
-} SmMaterial;
+};
 
 #define NO_MATERIAL -1
 

@@ -5,7 +5,7 @@
 #include "common.h"
 #include "vector3.h"
 
-typedef enum
+enum MATRIX_ELEMENTS
 {
 	_11 = 0,
 	_12 = 4,
@@ -23,7 +23,7 @@ typedef enum
 	_42 = 7,
 	_43 = 11,
 	_44 = 15
-} MATRIX_ELEMENTS;
+};
 
 /**
  * Represents a 4x4 column-major Matrix and provides common methods for
