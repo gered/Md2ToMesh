@@ -1,7 +1,7 @@
 # this Makefile is based on the ones from devkitPro
 # TODO: probably should simplify it a bunch (mainly the rules at the bottom)
 
-TARGET		:= meshconverter
+TARGET		:= md2tomesh
 
 
 
