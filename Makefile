@@ -31,18 +31,21 @@ $(info $(CFG) configuration selected)
 #-------------------------------------------------------------------------------
 UNAME := $(shell uname)
 
+#-------------------------------------------------------------------------------
 # default windows libraries and options
 PLATFORM          := win32
 PLATFORM_LD_FLAGS := -static-libgcc -static-libstdc++
-
+#-------------------------------------------------------------------------------
 ifeq ($(UNAME), Linux)
-# it appears that we're running on linux
 PLATFORM          := linux
 PLATFORM_LD_FLAGS := 
 endif
-
-# TODO: other platform detection
-
+#-------------------------------------------------------------------------------
+ifeq ($(UNAME), Darwin)
+PLATFORM          := osx
+PLATFORM_LD_FLAGS := 
+endif
+#-------------------------------------------------------------------------------
 
 
 #-------------------------------------------------------------------------------
