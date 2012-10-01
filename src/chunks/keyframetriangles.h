@@ -19,12 +19,10 @@ struct KeyFrameTrianglesChunk
 		if (triangles.size() == 0)
 			return 0;
 
-		uint32_t size = 4;  // count
-		size += 
-			(
-				(sizeof(uint32_t) * 3)      // vertex indices
-				+ (sizeof(uint32_t) * 3)    // texcoord indices
-			) * triangles.size();
+		uint32_t triangleSize = (sizeof(uint32_t) * 3) * 2; // vertex and texcoord indices (each for xyz)
+
+		uint32_t size = sizeof(uint32_t);   // count
+		size += triangleSize * triangles.size();
 
 		return size;
 	}

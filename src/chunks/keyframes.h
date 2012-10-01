@@ -35,18 +35,14 @@ struct KeyFramesChunk
 
 	uint32_t GetSize()
 	{
-		if (frames.size() == 0)
+		if (GetNumFrames() == 0)
 			return 0;
 
-		uint32_t size = 4;  // count
-		for (uint32_t i = 0; i < frames.size(); ++i)
-		{
-			size +=
-				(
-					(sizeof(float) * 3)      // vertex
-					+ (sizeof(float) * 3)    // normal
-				) * frames[i]->count;
-		}
+		uint32_t vertexSize = (sizeof(float) * 3) * 2; // vertex and normal xyz
+		uint32_t frameSize = vertexSize * numVertices;
+
+		uint32_t size = sizeof(uint32_t) * 2;  // count of frames & vertices
+		size += frameSize * GetNumFrames();
 
 		return size;
 	}
