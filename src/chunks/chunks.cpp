@@ -14,9 +14,9 @@ void WriteChunk(TexCoordsChunk *chunk, FILE *fp)
 		return;
 
 	fputs("TXT", fp);
-	fwrite(&size, 4, 1, fp);
+	fwrite(&size, sizeof(uint32_t), 1, fp);
 	uint32_t count = chunk->GetCount();
-	fwrite(&count, 4, 1, fp);
+	fwrite(&count, sizeof(uint32_t), 1, fp);
 
 	for (uint32_t i = 0; i < count; ++i)
 	{
@@ -32,10 +32,10 @@ void WriteChunk(KeyFramesChunk *chunk, FILE *fp)
 		return;
 
 	fputs("KFR", fp);
-	fwrite(&size, 4, 1, fp);
+	fwrite(&size, sizeof(uint32_t), 1, fp);
 	uint32_t numFrames = chunk->GetNumFrames();
-	fwrite(&numFrames, 4, 1, fp);
-	fwrite(&chunk->numVertices, 4, 1, fp);
+	fwrite(&numFrames, sizeof(uint32_t), 1, fp);
+	fwrite(&chunk->numVertices, sizeof(uint32_t), 1, fp);
 
 	for (uint32_t i = 0; i < numFrames; ++i)
 	{
@@ -64,21 +64,21 @@ void WriteChunk(KeyFrameTrianglesChunk *chunk, FILE *fp)
 		return;
 
 	fputs("KTR", fp);
-	fwrite(&size, 4, 1, fp);
+	fwrite(&size, sizeof(uint32_t), 1, fp);
 	uint32_t count = chunk->GetCount();
-	fwrite(&count, 4, 1, fp);
+	fwrite(&count, sizeof(uint32_t), 1, fp);
 
 	for (uint32_t i = 0; i < count; ++i)
 	{
 		KeyFrameTriangle *t = &chunk->triangles[i];
 
-		fwrite(&t->vertices[0], 4, 1, fp);
-		fwrite(&t->vertices[1], 4, 1, fp);
-		fwrite(&t->vertices[2], 4, 1, fp);
+		fwrite(&t->vertices[0], sizeof(uint32_t), 1, fp);
+		fwrite(&t->vertices[1], sizeof(uint32_t), 1, fp);
+		fwrite(&t->vertices[2], sizeof(uint32_t), 1, fp);
 
-		fwrite(&t->texCoords[0], 4, 1, fp);
-		fwrite(&t->texCoords[1], 4, 1, fp);
-		fwrite(&t->texCoords[2], 4, 1, fp);
+		fwrite(&t->texCoords[0], sizeof(uint32_t), 1, fp);
+		fwrite(&t->texCoords[1], sizeof(uint32_t), 1, fp);
+		fwrite(&t->texCoords[2], sizeof(uint32_t), 1, fp);
 	}
 }
 
@@ -89,9 +89,9 @@ void WriteChunk(AnimationsChunk *chunk, FILE *fp)
 		return;
 
 	fputs("ANI", fp);
-	fwrite(&size, 4, 1, fp);
+	fwrite(&size, sizeof(uint32_t), 1, fp);
 	uint32_t count = chunk->GetCount();
-	fwrite(&count, 4, 1, fp);
+	fwrite(&count, sizeof(uint32_t), 1, fp);
 
 	for (uint32_t i = 0; i < count; ++i)
 	{
