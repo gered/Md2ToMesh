@@ -43,16 +43,16 @@ void WriteChunk(KeyFramesChunk *chunk, FILE *fp)
 
 		for (uint32_t j = 0; j < chunk->numVertices; ++j)
 		{
-			fwrite(&f->vertices->x, sizeof(float), 1, fp);
-			fwrite(&f->vertices->y, sizeof(float), 1, fp);
-			fwrite(&f->vertices->z, sizeof(float), 1, fp);
+			fwrite(&f->vertices[j].x, sizeof(float), 1, fp);
+			fwrite(&f->vertices[j].y, sizeof(float), 1, fp);
+			fwrite(&f->vertices[j].z, sizeof(float), 1, fp);
 		}
 
 		for (uint32_t j = 0; j < chunk->numVertices; ++j)
 		{
-			fwrite(&f->normals->x, sizeof(float), 1, fp);
-			fwrite(&f->normals->y, sizeof(float), 1, fp);
-			fwrite(&f->normals->z, sizeof(float), 1, fp);
+			fwrite(&f->normals[j].x, sizeof(float), 1, fp);
+			fwrite(&f->normals[j].y, sizeof(float), 1, fp);
+			fwrite(&f->normals[j].z, sizeof(float), 1, fp);
 		}
 	}
 }
