@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include <exception>
 
@@ -10,17 +11,47 @@ int main(int argc, char **argv)
 
 	if (argc == 1)
 	{
-		printf("Usage: md2tomesh.exe [inputfile]\n\n");
+		printf("Usage: md2tomesh.exe [--scale=<scale factor>] [inputfile]\n\n");
 		return 1;
 	}
 
-	std::string file = argv[1];
+	// input file is always the last argument
+	std::string file = argv[argc - 1];
+
+	// default option values
+	float scaleFactor = 1.0f;
+
+	// find any options and update their values
+	for (int i = 1; i < argc - 1; ++i)
+	{
+		std::string arg = argv[i];
+
+		if (arg.substr(0, 8) == "--scale=")
+		{
+			// scale factor
+
+			if (arg.length() == 8)
+			{
+				printf("Missing scale factor.\n");
+				return 1;
+			}
+
+			scaleFactor = (float)atof(arg.substr(8).c_str());
+
+			if (scaleFactor == 0.0f)
+			{
+				printf("Invalid or 0.0 scale factor.\n");
+				return 1;
+			}
+		}
+	}
+
 	std::string extension;
 
 	try
 	{
 		extension = file.substr(file.find_last_of('.'), std::string::npos);
-		for (int i = 0; i < extension.size(); ++i)
+		for (unsigned int i = 0; i < extension.size(); ++i)
 			extension[i] = tolower(extension[i]);
 	}
 	catch (std::exception &e)
@@ -42,7 +73,7 @@ int main(int argc, char **argv)
 		printf("Error loading MD2 file.\n\n");
 		return 1;
 	}
-	if (!md2->ConvertToMesh(meshFile))
+	if (!md2->ConvertToMesh(meshFile, scaleFactor))
 	{
 		printf("Error converting MD2 to MESH.\n\n");
 		return 1;

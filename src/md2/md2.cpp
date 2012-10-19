@@ -294,7 +294,7 @@ bool Md2::Load(const std::string &file)
 	return true;
 }
 
-bool Md2::ConvertToMesh(const std::string &file)
+bool Md2::ConvertToMesh(const std::string &file, float scaleFactor)
 {
 	FILE *fp = fopen(file.c_str(), "wb");
 	if (fp == NULL)
@@ -310,7 +310,7 @@ bool Md2::ConvertToMesh(const std::string &file)
 		KeyFrame *frame = keyFramesChunk->AddFrame();
 
 		for (int j = 0; j < m_numVertices; ++j)
-			frame->vertices[j] = m_frames[i].vertices[j];
+			frame->vertices[j] = m_frames[i].vertices[j] * scaleFactor;
 		
 		for (int j = 0; j < m_numVertices; ++j)
 			frame->normals[j] = m_frames[i].normals[j];
@@ -342,7 +342,7 @@ bool Md2::ConvertToMesh(const std::string &file)
 	if (m_animations.size() > 0)
 	{
 		AnimationsChunk *animationsChunk = new AnimationsChunk();
-		for (long i = 0; i < m_animations.size(); ++i)
+		for (unsigned int i = 0; i < m_animations.size(); ++i)
 		{
 			AnimationSequence a;
 

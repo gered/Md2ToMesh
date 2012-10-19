@@ -73,7 +73,7 @@ public:
 
 	void Release();
 	bool Load(const std::string &file);
-	bool ConvertToMesh(const std::string &file);
+	bool ConvertToMesh(const std::string &file, float scaleFactor);
 
 	int GetNumFrames()                              { return m_numFrames; }
 	int GetNumVertices()                            { return m_numVertices; }
